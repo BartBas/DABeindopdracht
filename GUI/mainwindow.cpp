@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QListWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,6 +25,29 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox::information(this, "Error", "No connection established");
         qDebug() << db.lastError().text();
         }
+    MainWindow::showListBrand();
+}
+
+void MainWindow::showListBrand()
+{
+    db.open();
+    QSqlQuery query;
+    if(query.exec("SELECT studentnr FROM student"))
+    {
+        while(query.next())
+        {
+            QString studentNr = query.value(0).toString(); // Assuming the result is in column 0
+
+            // Add the item to the QListWidget
+            QListWidgetItem *item = new QListWidgetItem(studentNr);
+            ui->merk->addItem(item);
+        }
+    }
+    else
+    {
+        // Handle the case where the query execution failed
+        qDebug() << "Query failed:" << query.lastError().text();
+    }
 }
 
 MainWindow::~MainWindow()
