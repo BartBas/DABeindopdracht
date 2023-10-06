@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `tblStad` (
   `ID` int NOT NULL,
   `Stad` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY (`strStad`),
+  KEY (`strStad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
