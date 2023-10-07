@@ -1,46 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>main</class>
- <widget class="QMainWindow" name="main">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>786</width>
-    <height>572</height>
+    <width>903</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>761</width>
-      <height>511</height>
+      <x>11</x>
+      <y>1</y>
+      <width>881</width>
+      <height>641</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <item row="1" column="3">
-      <widget class="QTableView" name="autospecs"/>
-     </item>
      <item row="0" column="0">
       <widget class="QListWidget" name="merk"/>
      </item>
-     <item row="0" column="1" rowspan="2">
-      <widget class="QGraphicsView" name="Blob"/>
+     <item row="0" column="2">
+      <widget class="QListWidget" name="model"/>
      </item>
      <item row="1" column="0">
       <widget class="QListWidget" name="merkInfo"/>
      </item>
-     <item row="0" column="3">
-      <widget class="QListWidget" name="model"/>
+     <item row="1" column="2">
+      <widget class="QListWidget" name="modelDetails"/>
+     </item>
+     <item row="0" column="1" rowspan="2">
+      <widget class="QLabel" name="logo">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>100</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -50,17 +57,10 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>786</width>
-     <height>22</height>
+     <width>903</width>
+     <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="separator"/>
-   </widget>
-   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
