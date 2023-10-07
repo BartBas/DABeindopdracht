@@ -1,5 +1,7 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h" // Make sure this line is included
+#include "ui_mainwindow.h"
+#include <QImageReader>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,10 +25,12 @@ MainWindow::MainWindow(QWidget *parent)
     else{
         QMessageBox::information(this, "Error", "No connection established");
         qDebug() << db.lastError().text();
-        }
+    }
     db.close();
     MainWindow::listBrand();
     MainWindow::listBrandDetails("Philips");
+    MainWindow::listModel("Philips");
+    MainWindow::brandLogo("Philips");
 }
 
 void MainWindow::listBrand()
@@ -39,7 +43,7 @@ void MainWindow::listBrand()
         qDebug() << "Query failed:" << query.lastError().text();
         QListWidgetItem *failed = new QListWidgetItem("Query failed");
         ui->merk->addItem(failed);
-
+        return;
     }
     while(query.next())
     {
@@ -51,8 +55,6 @@ void MainWindow::listBrand()
     }
     db.close();
 }
-
-
 
 void MainWindow::listBrandDetails(std::string brandChosen)
 {
@@ -70,6 +72,7 @@ void MainWindow::listBrandDetails(std::string brandChosen)
         qDebug() << "Query failed:" << query.lastError().text();
         QListWidgetItem *failed = new QListWidgetItem("Query failed");
         ui->merkInfo->addItem(failed);
+        return;
     }
     while(query.next())
     {
@@ -84,7 +87,6 @@ void MainWindow::listBrandDetails(std::string brandChosen)
     db.close();
 }
 
-/*
 void MainWindow::listModel(std::string brand)
 {
     db.open();
@@ -100,6 +102,7 @@ void MainWindow::listModel(std::string brand)
         qDebug() << "Query failed:" << query.lastError().text();
         QListWidgetItem *failed = new QListWidgetItem("Query failed");
         ui->model->addItem(failed);
+        return;
     }
     while(query.next())
     {
@@ -113,23 +116,49 @@ void MainWindow::listModel(std::string brand)
     }
     db.close();
 }
-
+/*
 void MainWindow::listModelDetails(std::string model)
 {
     db.open();
     QSqlQuery query;
     db.close();
 }
+*/
 
 void MainWindow::brandLogo(std::string brandChosen)
 {
     db.open();
     QSqlQuery query;
+    //query.prepare("SELECT Plaatje FROM tblModel WHERE ID = 1"); //code used to test
+    query.prepare("SELECT blob FROM tblMerk "
+                  "WHERE merk = :chosen");
+    query.bindValue(":chosen", QString::fromStdString(brandChosen));
+    if(query.exec() && query.next())
+    {
+        QByteArray blobData = query.value(0).toByteArray();
+
+        QImageReader imageReader;
+        imageReader.setDevice(new QBuffer(&blobData));
+        QImage image = imageReader.read();
+
+        if(image.isNull())
+        {
+            qDebug() << "Failed to load image from blob";
+            return;
+        }
+        ui->logo->setPixmap(QPixmap::fromImage(image));
+        ui->logo->setAlignment(Qt::AlignCenter);
+    }
+    else
+    {
+        qDebug() << "Query failed";
+    }
+
     db.close();
 }
-*/
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
