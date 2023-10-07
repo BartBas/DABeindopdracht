@@ -28,9 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     }
     db.close();
     MainWindow::listBrand();
-    MainWindow::listBrandDetails("Philips");
-    MainWindow::listModel("Philips");
-    MainWindow::brandLogo("Philips");
+    //connect lists and buttons to functions
+    connect(ui->merk, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onBrandClicked(QListWidgetItem*)));
+    connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onModelClicked(QListWidgetItem*)));
 }
 
 void MainWindow::listBrand()
@@ -130,8 +130,8 @@ void MainWindow::brandLogo(std::string brandChosen)
     db.open();
     QSqlQuery query;
     //query.prepare("SELECT Plaatje FROM tblModel WHERE ID = 1"); //code used to test
-    query.prepare("SELECT blob FROM tblMerk "
-                  "WHERE merk = :chosen");
+    query.prepare("SELECT plaatje FROM tblMerk "
+                  "WHERE strMerk = :chosen");
     query.bindValue(":chosen", QString::fromStdString(brandChosen));
     if(query.exec() && query.next())
     {
@@ -156,6 +156,25 @@ void MainWindow::brandLogo(std::string brandChosen)
 
     db.close();
 }
+
+// Slot function to handle item click events of brand list
+void MainWindow::onBrandClicked(QListWidgetItem* brand)
+{
+    // Retrieve the text of the clicked item
+    QString brandName = brand->text();
+    qDebug() << "Clicked item: " << brandName; //for debugging
+    MainWindow::listBrandDetails(brandName.toStdString()); //show brand details
+    MainWindow::listModel(brandName.toStdString()); //show list of models
+    MainWindow::brandLogo(brandName.toStdString());
+}
+
+void MainWindow::onModelClicked(QListWidgetItem* model)
+{
+    QString modelName = model->text();
+    qDebug() << "Clicked item: " << modelName; //for debugging
+    //MainWindow::listModelDetails(modelName.toStdString()); //show model details
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;

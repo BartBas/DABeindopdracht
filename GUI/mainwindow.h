@@ -9,7 +9,7 @@
 #include <QListWidget>
 #include <QMainWindow>
 #include <QtWidgets>
-
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,9 +28,14 @@ public:
     //void listModelDetails(std::string model);
     void brandLogo(std::string brandChosen);
 
+private slots:
+    void onBrandClicked(QListWidgetItem* item);
+    void onModelClicked(QListWidgetItem* item);
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase db;
+    QListWidget* listWidget;
 };
 
 #endif // MAINWINDOW_H
