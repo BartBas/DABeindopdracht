@@ -14,23 +14,23 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 
 --
--- Table structure for table `Stad`
+-- Table structure for table `LAnd`
 --
 
 CREATE TABLE IF NOT EXISTS `tblLand` (
   `ID` int NOT NULL,
-  `Land` varchar(20) NOT NULL,
+  `strLand` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY (`strLand`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `Land`
+-- Table structure for table `Stad`
 --
 
 CREATE TABLE IF NOT EXISTS `tblStad` (
   `ID` int NOT NULL,
-  `Stad` varchar(20) NOT NULL,
+  `strStad` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY (`strStad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `tblMerk` (
   `ID` int NOT NULL,
   `strMerk` varchar(20) NOT NULL,
   `LocatieID` int NOT NULL,
+  `Plaatje` BLOB,
   PRIMARY KEY (`ID`),
   FOREIGN KEY(`LocatieID`) REFERENCES `tblLocatie`(`ID`),
   KEY (`strMerk`)
@@ -77,9 +78,9 @@ CREATE TABLE IF NOT EXISTS `tblVermogen` (
 -- Table structure for table `Uitvoering`
 --
 
-CREATE TABLE IF NOT EXISTS `tblUitvoering` (
+CREATE TABLE IF NOT EXISTS `tblType` (
   `ID` int NOT NULL,
-  `strUitvoering` varchar(20) NOT NULL,
+  `strType` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -89,13 +90,12 @@ CREATE TABLE IF NOT EXISTS `tblUitvoering` (
 
 CREATE TABLE IF NOT EXISTS `tblModel` (
   `ID` int NOT NULL,
-  `strType` varchar(20) NOT NULL,
-  `UitvoeringID` int,
+  `strUitvoering` varchar(20) NOT NULL,
+  `TypeID` int,
   `VermogenID` int NOT NULL,
-  `Plaatje` BLOB,
   PRIMARY KEY (`ID`),
-  KEY (`strType`),
-  FOREIGN KEY(`UitvoeringID`) REFERENCES `tblUitvoering`(`ID`),
+  KEY (`strUitvoering`),
+  FOREIGN KEY(`TypeID`) REFERENCES `tblType`(`ID`),
   FOREIGN KEY(`VermogenID`) REFERENCES `tblVermogen`(`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
