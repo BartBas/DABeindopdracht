@@ -116,14 +116,26 @@ void MainWindow::listModel(std::string brand)
     }
     db.close();
 }
-/*
 void MainWindow::listModelDetails(std::string model)
 {
     db.open();
     QSqlQuery query;
+    query.prepare("SELECT tblVermogen.PK, tblVermogen.KW FROM tblModel"
+                  "JOIN tblVermogen ON tblModel.vermogenID = tblVermogen.ID"
+                  "WHERE tblModel = :modelChosen");
+    query.bindValue(":modelChosen", QString::fromStdString(model));
+    while(query.next())
+    {
+        QString PK = query.value(0).toString(); //get PK from query
+        QString KW = query.value(1).toString(); //get KW from query
+
+        QString vermogen = "PK:" + PK + "& KW:" + KW; //combine PK and KW with context for reader
+
+        QListWidgetItem *item = new QListWidgetItem(vermogen);
+        ui->modelDetails->addItem(item);
+    }
     db.close();
 }
-*/
 
 void MainWindow::brandLogo(std::string brandChosen)
 {
@@ -172,7 +184,7 @@ void MainWindow::onModelClicked(QListWidgetItem* model)
 {
     QString modelName = model->text();
     qDebug() << "Clicked item: " << modelName; //for debugging
-    //MainWindow::listModelDetails(modelName.toStdString()); //show model details
+    MainWindow::listModelDetails(modelName.toStdString()); //show model details
 }
 
 MainWindow::~MainWindow()
