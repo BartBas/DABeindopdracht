@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect lists and buttons to functions
     connect(ui->merk, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onBrandClicked(QListWidgetItem*)));
     connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onModelClicked(QListWidgetItem*)));
+    connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(listModelDetails(QListWidgetItem*)));
 }
 
 void MainWindow::listBrand()
