@@ -69,13 +69,22 @@ CREATE TABLE IF NOT EXISTS `tblMerk` (
 
 CREATE TABLE IF NOT EXISTS `tblVermogen` (
   `ID` int NOT NULL,
-  `PK` int,
-  `KW` int,
+  `Vermogen` int,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `Uitvoering`
+--
+
+CREATE TABLE IF NOT EXISTS `tblUitvoering` (
+  `ID` int NOT NULL,
+  `strUitvoering` varchar(20) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `Type`
 --
 
 CREATE TABLE IF NOT EXISTS `tblType` (
@@ -84,17 +93,18 @@ CREATE TABLE IF NOT EXISTS `tblType` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
 --
 -- Table structure for table `Model`
 --
 
 CREATE TABLE IF NOT EXISTS `tblModel` (
   `ID` int NOT NULL,
-  `strUitvoering` varchar(20) NOT NULL,
+  `UitvoeringID` int,
   `TypeID` int,
   `VermogenID` int NOT NULL,
   PRIMARY KEY (`ID`),
-  KEY (`strUitvoering`),
+  FOREIGN KEY(`UitvoeringID`) REFERENCES `tblUitvoering`(`ID`),
   FOREIGN KEY(`TypeID`) REFERENCES `tblType`(`ID`),
   FOREIGN KEY(`VermogenID`) REFERENCES `tblVermogen`(`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
