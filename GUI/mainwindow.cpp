@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onModelClicked(QListWidgetItem*)));
     connect(ui->radioButton, SIGNAL(clicked()), this, SLOT(radioButton()));
     connect(ui->actionBrand, &QAction::triggered, this, &MainWindow::addBrand);
-
 }
 
 void MainWindow::listBrand()
@@ -226,9 +225,59 @@ void MainWindow::onModelClicked(QListWidgetItem* model)
     MainWindow::listModelDetails(modelName.toStdString()); //show model details
 }
 
+void MainWindow::addTemplate(std::string from)
+{
+    db.open();
+    QSqlQuery query;
+    QLabel *chooseBrand = new QLabel(this);
+    bool ok;
+    QString windowName = "Add" + QString::fromStdString(from);
+    QString fromQString = QString::fromStdString(from).trimmed();
+    QString enter;
+
+    if(fromQString != "Power")
+    {
+        enter = QString::fromStdString(from) + "Name:";
+        qDebug()<< "entered if";
+    }
+    else
+    {
+        enter = QString::fromStdString(from);
+    }
+    QString text = QInputDialog::getText(this, tr(qPrintable(windowName)),
+                                         tr(qPrintable(enter)), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !text.isEmpty())
+        chooseBrand->setText(text);
+
+    QString intotbl = "tbl" + QString::fromStdString(from);
+    QString queryStr = "SELECT max(ID) FROM " + intotbl;
+
+    query.prepare(queryStr);
+    if(!query.exec())
+    {
+        qDebug() << "Query failed:" << query.lastError().text();
+        QMessageBox::information(this, "Error", "Query failed");
+        return;
+    }
+
+    queryStr = "INSERT INTO " + intotbl + " VALUES (:value1, :value2)";
+    query.prepare(queryStr);
+    query.bindValue(":value1", query.value(0));  // Replace "column1" with your actual column name
+    query.bindValue(":value2", text);           // Replace "column2" with your actual column name
+
+    if (query.exec()) {
+        // Handle the successful insertion here
+    } else {
+        qDebug() << "Query failed:" << query.lastError().text();
+    }
+
+        db.close();
+}
+
 void MainWindow::addBrand()
 {
-    qDebug() << "Test";
+        addTemplate("Merk");
 }
 
 MainWindow::~MainWindow()

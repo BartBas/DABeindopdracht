@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include <QDebug>
 #include <QPushButton>
+#include <QInputDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,10 +29,11 @@ public:
     void listModel(std::string brand);
     void listModelDetails(std::string model);
     void brandLogo(std::string brandChosen);
+    void addTemplate(std::string from);
 
 public slots:
     void radioButton();
-    void addBrand();
+    //void addBrand();
     //void addModel();
     //void changeBrandName();
     //void changeHQ();
