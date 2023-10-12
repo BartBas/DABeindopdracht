@@ -1,0 +1,5 @@
+erd
+stroken
+cascading
+radio button
+database
