@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `tblMerk` (
 
 CREATE TABLE IF NOT EXISTS `tblVermogen` (
   `ID` int NOT NULL,
-  `Vermogen` int,
+  
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -102,12 +102,11 @@ CREATE TABLE IF NOT EXISTS `tblModel` (
   `ID` int NOT NULL,
   `UitvoeringID` int,
   `TypeID` int,
-  `VermogenID` int NOT NULL,
+  `Vermogen` int,
   PRIMARY KEY (`ID`),
   FOREIGN KEY(`UitvoeringID`) REFERENCES `tblUitvoering`(`ID`),
   FOREIGN KEY(`TypeID`) REFERENCES `tblType`(`ID`),
-  FOREIGN KEY(`VermogenID`) REFERENCES `tblVermogen`(`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `Auto`
