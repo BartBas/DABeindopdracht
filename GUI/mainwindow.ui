@@ -6,37 +6,72 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>903</width>
-    <height>690</height>
+    <width>882</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>1</y>
-      <width>881</width>
-      <height>641</height>
+      <x>12</x>
+      <y>2</y>
+      <width>591</width>
+      <height>661</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
       <widget class="QListWidget" name="merk"/>
      </item>
-     <item row="0" column="2">
+     <item>
       <widget class="QListWidget" name="model"/>
      </item>
-     <item row="1" column="0">
-      <widget class="QListWidget" name="merkInfo"/>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>0</y>
+      <width>258</width>
+      <height>661</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>15</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Location:</string>
+       </property>
+      </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QListWidget" name="modelDetails"/>
+     <item>
+      <widget class="QListWidget" name="merkInfo">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
-     <item row="0" column="1" rowspan="2">
+     <item>
       <widget class="QLabel" name="logo">
        <property name="minimumSize">
         <size>
@@ -46,12 +81,38 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
-         <height>200</height>
+         <width>1000</width>
+         <height>1000</height>
         </size>
        </property>
        <property name="text">
         <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>15</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Power:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="modelDetails">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -63,12 +124,24 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>903</width>
+     <width>882</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionclose"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionclose">
+   <property name="text">
+    <string>close</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
