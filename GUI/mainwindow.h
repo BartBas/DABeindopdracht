@@ -25,7 +25,7 @@ public:
     void listBrand();
     void listBrandDetails(std::string brandChosen);
     void listModel(std::string brand);
-    //void listModelDetails(std::string model);
+    void listModelDetails(std::string model);
     void brandLogo(std::string brandChosen);
 
 private slots:
