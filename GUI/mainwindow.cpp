@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
     //connect lists and buttons to functions
     connect(ui->merk, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onBrandClicked(QListWidgetItem*)));
     connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onModelClicked(QListWidgetItem*)));
+    connect(ui->radioButton, SIGNAL(clicked()), this, SLOT(radioButton()));
+    connect(ui->actionBrand, &QAction::triggered, this, &MainWindow::addBrand);
+
 }
 
 void MainWindow::listBrand()
@@ -87,7 +90,6 @@ void MainWindow::listBrandDetails(std::string brandChosen)
     }
     db.close();
 }
-
 void MainWindow::listModel(std::string brand)
 {
     db.open();
@@ -126,12 +128,12 @@ void MainWindow::listModel(std::string brand)
     }
     db.close();
 }
+
 void MainWindow::listModelDetails(std::string model)
 {
     db.open();
     QSqlQuery query;
-    query.prepare("SELECT tblVermogen.Vermogen FROM tblModel "
-                  "JOIN tblVermogen ON tblModel.vermogenID = tblVermogen.ID "
+    query.prepare("SELECT tblModel.Vermogen FROM tblModel "
                   "JOIN tblType ON tblModel.TypeID = tblType.ID "
                   "LEFT JOIN tblUitvoering ON tblModel.UitvoeringID = tblUitvoering.ID "
                   "WHERE CONCAT(tblType.strType, IF(tblUitvoering.strUitvoering IS NOT NULL, CONCAT(\" \", tblUitvoering.strUitvoering), \"\")) =  :modelChosen ");
@@ -140,22 +142,43 @@ void MainWindow::listModelDetails(std::string model)
     {
         qDebug() << "Query failed:" << query.lastError().text();
         QListWidgetItem *failed = new QListWidgetItem("Query failed");
-        ui->model->addItem(failed);
+        ui->modelDetails->addItem(failed);
         return;
     }
     ui->modelDetails->clear();
-    while(query.next())
-    {
-        QString KW = query.value(0).toString(); //get PK from query
-        float KWFloat = KW.toFloat();
-        float KWCalculated = round(KWFloat*(1.3625));
+    QString KW = query.value(0).toString(); //get PK from query
+    KWFloat = KW.toFloat();
 
-        QString vermogen = "PK: " + QString::number(KWCalculated) + " & KW: " + KW; //combine PK and KW with context for reader
+    PKCalculated = round(KWFloat*(1.3625));
+
+    QString vermogen = "KW: " + KW; //combine PK and KW with context for reader
+
+    QListWidgetItem *item = new QListWidgetItem(vermogen);
+    ui->modelDetails->addItem(item);
+
+    db.close();
+}
+
+void MainWindow::radioButton()
+{
+    ui->modelDetails->clear();
+    qDebug() << "radioButton Called";
+    if(radioState)
+    {
+        QString vermogen = "PK: " + QString::number(PKCalculated);
 
         QListWidgetItem *item = new QListWidgetItem(vermogen);
         ui->modelDetails->addItem(item);
+        radioState = false;
     }
-    db.close();
+    else
+    {
+        QString vermogen = "PK: " + QString::number(KWFloat);
+
+        QListWidgetItem *item = new QListWidgetItem(vermogen);
+        ui->modelDetails->addItem(item);
+        radioState = true;
+    }
 }
 
 void MainWindow::brandLogo(std::string brandChosen)
@@ -193,6 +216,7 @@ void MainWindow::onBrandClicked(QListWidgetItem* brand)
     MainWindow::listBrandDetails(brandName.toStdString()); //show brand details
     MainWindow::listModel(brandName.toStdString()); //show list of models
     MainWindow::brandLogo(brandName.toStdString());
+    ui->modelDetails->clear();
 }
 
 void MainWindow::onModelClicked(QListWidgetItem* model)
@@ -202,7 +226,14 @@ void MainWindow::onModelClicked(QListWidgetItem* model)
     MainWindow::listModelDetails(modelName.toStdString()); //show model details
 }
 
+void MainWindow::addBrand()
+{
+    qDebug() << "Test";
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
