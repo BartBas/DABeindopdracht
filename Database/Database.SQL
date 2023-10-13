@@ -64,16 +64,6 @@ CREATE TABLE IF NOT EXISTS `tblMerk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `Vermorgen`
---
-
-CREATE TABLE IF NOT EXISTS `tblVermogen` (
-  `ID` int NOT NULL,
-  
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
 -- Table structure for table `Uitvoering`
 --
 
