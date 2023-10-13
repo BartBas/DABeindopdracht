@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->merk, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onBrandClicked(QListWidgetItem*)));
     connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onModelClicked(QListWidgetItem*)));
     connect(ui->radioButton, SIGNAL(clicked()), this, SLOT(radioButton()));
-    connect(ui->actionBrand, &QAction::triggered, this, &MainWindow::addBrand);
+    //connect(ui->actionBrand, &QAction::triggered, this, &MainWindow::addBrand);
 }
 
 void MainWindow::listBrand()
