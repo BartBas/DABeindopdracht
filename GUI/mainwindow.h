@@ -10,8 +10,6 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <QDebug>
-#include <QPushButton>
-#include <QInputDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,20 +25,8 @@ public:
     void listBrand();
     void listBrandDetails(std::string brandChosen);
     void listModel(std::string brand);
-    void listModelDetails(std::string model);
+    //void listModelDetails(std::string model);
     void brandLogo(std::string brandChosen);
-    void addTemplate(std::string from);
-
-public slots:
-    void radioButton();
-    //void addBrand();
-    //void addModel();
-    //void changeBrandName();
-    //void changeHQ();
-    //void changeModelName();
-    //void changePower();
-    //void removeBrand();
-    //void removeModel();
 
 private slots:
     void onBrandClicked(QListWidgetItem* item);
@@ -50,9 +36,6 @@ private:
     Ui::MainWindow *ui;
     QSqlDatabase db;
     QListWidget* listWidget;
-    float KWFloat;
-    float PKCalculated;
-    bool radioState;
 };
 
 #endif // MAINWINDOW_H
