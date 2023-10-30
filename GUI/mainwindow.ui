@@ -6,37 +6,72 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>903</width>
-    <height>690</height>
+    <width>956</width>
+    <height>721</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>1</y>
-      <width>881</width>
-      <height>641</height>
+      <x>12</x>
+      <y>2</y>
+      <width>591</width>
+      <height>661</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
       <widget class="QListWidget" name="merk"/>
      </item>
-     <item row="0" column="2">
+     <item>
       <widget class="QListWidget" name="model"/>
      </item>
-     <item row="1" column="0">
-      <widget class="QListWidget" name="merkInfo"/>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>0</y>
+      <width>311</width>
+      <height>661</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>15</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Location:</string>
+       </property>
+      </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QListWidget" name="modelDetails"/>
+     <item>
+      <widget class="QListWidget" name="merkInfo">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
-     <item row="0" column="1" rowspan="2">
+     <item>
       <widget class="QLabel" name="logo">
        <property name="minimumSize">
         <size>
@@ -46,12 +81,45 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>200</width>
-         <height>200</height>
+         <width>1000</width>
+         <height>1000</height>
         </size>
        </property>
        <property name="text">
         <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>15</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Power:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="radioButton">
+       <property name="text">
+        <string>PK/KW</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="modelDetails">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -63,12 +131,112 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>903</width>
+     <width>956</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuadd">
+    <property name="title">
+     <string>add</string>
+    </property>
+    <addaction name="actionBrand"/>
+    <addaction name="actionModel"/>
+   </widget>
+   <widget class="QMenu" name="menuchange">
+    <property name="title">
+     <string>change</string>
+    </property>
+    <addaction name="actionBrandName"/>
+    <addaction name="actionHQ"/>
+    <addaction name="actionModelName"/>
+    <addaction name="actionPower"/>
+   </widget>
+   <widget class="QMenu" name="menuremove">
+    <property name="title">
+     <string>remove</string>
+    </property>
+    <addaction name="actionBrandRemove"/>
+    <addaction name="actionModelRemove"/>
+   </widget>
+   <addaction name="menuadd"/>
+   <addaction name="menuchange"/>
+   <addaction name="menuremove"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionadd">
+   <property name="text">
+    <string>add</string>
+   </property>
+  </action>
+  <action name="actionremove">
+   <property name="text">
+    <string>remove</string>
+   </property>
+  </action>
+  <action name="actionBrand">
+   <property name="text">
+    <string>Brand</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a brand</string>
+   </property>
+  </action>
+  <action name="actionModel">
+   <property name="text">
+    <string>Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a model</string>
+   </property>
+  </action>
+  <action name="actionBrandName">
+   <property name="text">
+    <string>BrandName</string>
+   </property>
+   <property name="toolTip">
+    <string>Change the name of a brand</string>
+   </property>
+  </action>
+  <action name="actionModelName">
+   <property name="text">
+    <string>ModelName</string>
+   </property>
+   <property name="toolTip">
+    <string>Change the name of a model</string>
+   </property>
+  </action>
+  <action name="actionHQ">
+   <property name="text">
+    <string>HQ</string>
+   </property>
+   <property name="toolTip">
+    <string>Change the location</string>
+   </property>
+  </action>
+  <action name="actionPower">
+   <property name="text">
+    <string>Power</string>
+   </property>
+   <property name="toolTip">
+    <string>Change the power</string>
+   </property>
+  </action>
+  <action name="actionBrandRemove">
+   <property name="text">
+    <string>Brand</string>
+   </property>
+   <property name="toolTip">
+    <string>Removes the brand and everything connected to the brand</string>
+   </property>
+  </action>
+  <action name="actionModelRemove">
+   <property name="text">
+    <string>Model</string>
+   </property>
+   <property name="toolTip">
+    <string>Removes the model</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

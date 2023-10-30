@@ -31,7 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     //connect lists and buttons to functions
     connect(ui->merk, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onBrandClicked(QListWidgetItem*)));
     connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(onModelClicked(QListWidgetItem*)));
-    connect(ui->model, SIGNAL(itemClicked(QListWidgetItem*)),this, SLOT(listModelDetails(QListWidgetItem*)));
+    connect(ui->radioButton, SIGNAL(clicked()), this, SLOT(radioButton()));
+    connect(ui->actionBrand, &QAction::triggered, this, &MainWindow::addBrand);
 }
 
 void MainWindow::listBrand()
@@ -75,6 +76,7 @@ void MainWindow::listBrandDetails(std::string brandChosen)
         ui->merkInfo->addItem(failed);
         return;
     }
+    ui->merkInfo->clear();
     while(query.next())
     {
         QString stad = query.value(0).toString(); //get stad from the query
@@ -87,16 +89,16 @@ void MainWindow::listBrandDetails(std::string brandChosen)
     }
     db.close();
 }
-
 void MainWindow::listModel(std::string brand)
 {
     db.open();
     QSqlQuery query;
-    query.prepare("SELECT tblModel.strType, tblUitvoering.strUitvoering FROM tblAuto "
+    query.prepare("SELECT tbltype.strType, tblUitvoering.strUitvoering FROM tblAuto "
                   "JOIN tblModel ON tblAuto.TypeID = tblModel.ID "
-                  "JOIN tblUitvoering ON tblModel.UitvoeringID = tblUitvoering.ID "
+                  "JOIN tblType ON tblModel.TypeID = tblType.ID "
+                  "LEFT JOIN tblUitvoering ON tblModel.UitvoeringID = tblUitvoering.ID "
                   "JOIN tblMerk ON tblAuto.MerkID = tblMerk.ID "
-                  "WHERE tblMerk.Merk = :brand ");
+                  "WHERE tblMerk.strMerk = :brand ");
     query.bindValue(":brand", QString::fromStdString(brand));
     if(!query.exec())
     {
@@ -105,37 +107,77 @@ void MainWindow::listModel(std::string brand)
         ui->model->addItem(failed);
         return;
     }
+    ui->model->clear();
     while(query.next())
     {
         QString type = query.value(0).toString(); //get type from the query
         QString uitvoering = query.value(1).toString(); //get uitvoering from the query
 
-        QString model = type + " " + uitvoering; //combine type and uitvoering for the model
+
+        QString model = type + " ";
+
+        if(uitvoering != "")
+        {
+            model = model + uitvoering; //combine type and uitvoering for the model
+        }
 
         QListWidgetItem *item = new QListWidgetItem(model);
+
         ui->model->addItem(item);
     }
     db.close();
 }
+
 void MainWindow::listModelDetails(std::string model)
 {
     db.open();
     QSqlQuery query;
-    query.prepare("SELECT tblVermogen.PK, tblVermogen.KW FROM tblModel"
-                  "JOIN tblVermogen ON tblModel.vermogenID = tblVermogen.ID"
-                  "WHERE tblModel = :modelChosen");
+    query.prepare("SELECT tblModel.Vermogen FROM tblModel "
+                  "JOIN tblType ON tblModel.TypeID = tblType.ID "
+                  "LEFT JOIN tblUitvoering ON tblModel.UitvoeringID = tblUitvoering.ID "
+                  "WHERE CONCAT(tblType.strType, IF(tblUitvoering.strUitvoering IS NOT NULL, CONCAT(\" \", tblUitvoering.strUitvoering), \"\")) =  :modelChosen ");
     query.bindValue(":modelChosen", QString::fromStdString(model));
-    while(query.next())
+    if(!query.exec())
     {
-        QString PK = query.value(0).toString(); //get PK from query
-        QString KW = query.value(1).toString(); //get KW from query
+        qDebug() << "Query failed:" << query.lastError().text();
+        QListWidgetItem *failed = new QListWidgetItem("Query failed");
+        ui->modelDetails->addItem(failed);
+        return;
+    }
+    ui->modelDetails->clear();
+    QString KW = query.value(0).toString(); //get PK from query
+    KWFloat = KW.toFloat();
 
-        QString vermogen = "PK:" + PK + "& KW:" + KW; //combine PK and KW with context for reader
+    PKCalculated = round(KWFloat*(1.3625));
+
+    QString vermogen = "KW: " + KW; //combine PK and KW with context for reader
+
+    QListWidgetItem *item = new QListWidgetItem(vermogen);
+    ui->modelDetails->addItem(item);
+
+    db.close();
+}
+
+void MainWindow::radioButton()
+{
+    ui->modelDetails->clear();
+    qDebug() << "radioButton Called";
+    if(radioState)
+    {
+        QString vermogen = "PK: " + QString::number(PKCalculated);
 
         QListWidgetItem *item = new QListWidgetItem(vermogen);
         ui->modelDetails->addItem(item);
+        radioState = false;
     }
-    db.close();
+    else
+    {
+        QString vermogen = "PK: " + QString::number(KWFloat);
+
+        QListWidgetItem *item = new QListWidgetItem(vermogen);
+        ui->modelDetails->addItem(item);
+        radioState = true;
+    }
 }
 
 void MainWindow::brandLogo(std::string brandChosen)
@@ -143,23 +185,17 @@ void MainWindow::brandLogo(std::string brandChosen)
     db.open();
     QSqlQuery query;
     //query.prepare("SELECT Plaatje FROM tblModel WHERE ID = 1"); //code used to test
-    query.prepare("SELECT plaatje FROM tblMerk "
+    query.prepare("SELECT Plaatje FROM tblMerk "
                   "WHERE strMerk = :chosen");
     query.bindValue(":chosen", QString::fromStdString(brandChosen));
     if(query.exec() && query.next())
     {
         QByteArray blobData = query.value(0).toByteArray();
 
-        QImageReader imageReader;
-        imageReader.setDevice(new QBuffer(&blobData));
-        QImage image = imageReader.read();
-
-        if(image.isNull())
-        {
-            qDebug() << "Failed to load image from blob";
-            return;
-        }
-        ui->logo->setPixmap(QPixmap::fromImage(image));
+        QImage image;
+        image.loadFromData(QByteArray::fromBase64(blobData));
+        QImage image2 = image.scaled(200, 200, Qt::KeepAspectRatio);
+        ui->logo->setPixmap(QPixmap::fromImage(image2));
         ui->logo->setAlignment(Qt::AlignCenter);
     }
     else
@@ -179,6 +215,7 @@ void MainWindow::onBrandClicked(QListWidgetItem* brand)
     MainWindow::listBrandDetails(brandName.toStdString()); //show brand details
     MainWindow::listModel(brandName.toStdString()); //show list of models
     MainWindow::brandLogo(brandName.toStdString());
+    ui->modelDetails->clear();
 }
 
 void MainWindow::onModelClicked(QListWidgetItem* model)
@@ -187,9 +224,71 @@ void MainWindow::onModelClicked(QListWidgetItem* model)
     qDebug() << "Clicked item: " << modelName; //for debugging
     MainWindow::listModelDetails(modelName.toStdString()); //show model details
 }
+/*
+void MainWindow::addTemplate(std::string from)
+{
+    db.open();
+    QSqlQuery query;
+    QLabel *chooseBrand = new QLabel(this);
+    bool ok;
+    QString windowName = "Add" + QString::fromStdString(from);
+    QString fromQString = QString::fromStdString(from).trimmed();
+    QString enter;
+
+    if(fromQString != "Power")
+    {
+        enter = QString::fromStdString(from) + "Name:";
+        qDebug()<< "entered if";
+    }
+    else
+    {
+        enter = QString::fromStdString(from);
+    }
+    QString text = QInputDialog::getText(this, tr(qPrintable(windowName)),
+                                         tr(qPrintable(enter)), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !text.isEmpty())
+        chooseBrand->setText(text);
+
+    QString location = QInputDialog::getText(this, tr(qPrintable(windowName)),
+                                         tr(qPrintable(enter)), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !text.isEmpty())
+        chooseBrand->setText(location);
+
+    QString intotbl = "tbl" + QString::fromStdString(from);
+    QString queryStr = "SELECT max(ID) FROM " + intotbl;
+
+    query.prepare(queryStr);
+    if(!query.exec())
+    {
+        qDebug() << "Query failed:" << query.lastError().text();
+        QMessageBox::information(this, "Error", "Query failed");
+        return;
+    }
+
+    queryStr = "INSERT INTO " + intotbl + " VALUES (:value1, :value2)";
+    query.prepare(queryStr);
+    query.bindValue(":value1", query.value(0));  // Replace "column1" with your actual column name
+    query.bindValue(":value2", text);           // Replace "column2" with your actual column name
+
+    if (query.exec()) {
+        // Handle the successful insertion here
+    } else {
+        qDebug() << "Query failed:" << query.lastError().text();
+    }
+
+        db.close();
+}
+
+void MainWindow::addBrand()
+{
+        addTemplate("Merk");
+}*/
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
